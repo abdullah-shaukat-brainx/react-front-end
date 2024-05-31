@@ -7,10 +7,11 @@ import {
   isValidEmailFormat,
   isValidPasswordFormat,
 } from "../../../Services/utilServices";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 function LogInForm() {
-  const data = { email: "", password: "" };
-  const [inputData, setInputData] = useState(data);
+  const navigate = useNavigate();
+  const initialData = { email: "", password: "" };
+  const [inputData, setInputData] = useState(initialData);
   function handleChange(e) {
     setInputData({ ...inputData, [e.target.name]: e.target.value });
   }
@@ -31,11 +32,18 @@ function LogInForm() {
 
     login(inputData.email, inputData.password)
       .then((data) => {
-        toast.success("User login successful.");
+        localStorage.setItem("access_token", data?.access_token);
+        localStorage.setItem("user_details", JSON.stringify(data?.data?.User));
+
+        toast.success("Login successful, redirecting to your Todos Page.");
+        setInputData(initialData)
+        setTimeout(() => {
+          navigate("/todos/todo_home");
+        }, 3000);
       })
       .catch((error) => {
         console.log(error);
-        toast.error(error?.response?.data?.error);
+        toast.error(`${error?.response?.data?.error}` || `Failed to Log in.`);
       });
   }
 
@@ -63,6 +71,8 @@ function LogInForm() {
             <label htmlFor="password">
               <strong>Password</strong>
             </label>
+
+            {/* Password should have functionality of view */}
             <input
               type="password"
               name="password"

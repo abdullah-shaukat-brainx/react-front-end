@@ -7,7 +7,11 @@ function HomePage() {
       <br />
       <Link to="users/login">Login</Link>
       <br />
-      <Link to="users/verify_email/123">Verify</Link>
+      {/* <Link to="users/verify_email/123">Verify</Link>
+      <br/> */}
+      <Link to="users/forget_password/">Forget Password</Link>
+      <br/>
+      <Link to="users/change_password/">Change Password</Link>
     </>
   );
 }

@@ -1,0 +1,73 @@
+.todo-item {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 2em;
+}
+
+.todo-item-text {
+  flex: 0 0 85%; /* Flex-grow: 0, flex-shrink: 0, flex-basis: 80% */
+  /* background-color: lightgray; Just for visualization */
+}
+
+.todo-item-controls {
+  flex: 0 0 15%; /* Flex-grow: 0, flex-shrink: 0, flex-basis: 80% */
+  /* background-color: lightblue; Just for visualization */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.delete-todo-button,
+.update-todo-button {
+  width: 45%;
+  /* background-color: blue; */
+}
+
+.delete-todo-button input,
+.update-todo-button input {
+  width: 100%;
+  border-radius: 5px;
+  border: none;
+  height: 3em;
+  font-weight: bolder;
+}
+
+.delete-todo-button input:hover,
+.update-todo-button input:hover {
+  opacity: 50%;
+}
+
+.update-todo-button input {
+  color: black;
+  background-color: rgb(218, 221, 29);
+}
+
+.delete-todo-button input {
+  color: white;
+  background-color: rgb(219, 35, 35);
+}
+
+.update-todo-card {
+  display: flex;
+  flex-direction: row;
+  /* background-color: aqua; */
+  justify-content: space-between;
+  margin-bottom: 3em;
+}
+
+.update-input-fields-div {
+  display: flex;
+  flex-direction: row;
+}
+
+.todo-status select {
+  background-color: rgb(27, 201, 224);
+  border: 1px solid;
+  height: 3em;
+  border-radius: 5px;
+  font-weight: bolder;
+}
+.completed-item {
+  font-style: italic;
+  text-decoration: line-through;
+}

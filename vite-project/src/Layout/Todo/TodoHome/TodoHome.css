@@ -1,0 +1,18 @@
+.username-header {
+  font-size: 2em;
+  text-align: center;
+  margin-top: 5%;
+}
+.todos-card{
+    margin-top: 5%;
+    margin-left: 10%;
+    margin-right: 10%;
+}
+/* 
+.todo-item:hover{
+    opacity: 50%;
+} */
+
+/* li:hover{
+    border: 1px solid black;
+} */

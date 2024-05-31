@@ -11,8 +11,8 @@ import { Link } from "react-router-dom";
 
 
 function SignUpForm() {
-  const data = { email: "", password: "", confirmPassword: "" };
-  const [inputData, setInputData] = useState(data);
+  const initialData = { email: "", password: "", confirmPassword: "" };  //it should be state
+  const [inputData, setInputData] = useState(initialData); 
 
   function handleChange(e) {
     setInputData({ ...inputData, [e.target.name]: e.target.value });
@@ -39,6 +39,7 @@ function SignUpForm() {
     signup(inputData.email, inputData.password, inputData.confirmPassword)
       .then((data) => {
         toast.success("User sign up successful, check email for verification link.");
+        setInputData(initialData)
       })
       .catch((error) => {
         console.log(error)
