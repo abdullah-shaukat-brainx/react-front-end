@@ -1,4 +1,4 @@
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { verify } from "../../../Services/authServices";
 import { ToastContainer, toast } from "react-toastify";
 import { useEffect, useState, useRef } from "react";
@@ -21,9 +21,7 @@ function VerifyEmail() {
       );
     } finally {
       setProgress(false);
-      setTimeout(() => {
-        navigate("/users/login");
-      }, 5000);
+      navigate("/users/login");
     }
   };
 
@@ -36,7 +34,6 @@ function VerifyEmail() {
 
   return (
     <>
-      <ToastContainer />
       <h1>Verify User Page</h1>
       {!progress && (
         <h2>Verification under progress, wait for a few seconds...</h2>

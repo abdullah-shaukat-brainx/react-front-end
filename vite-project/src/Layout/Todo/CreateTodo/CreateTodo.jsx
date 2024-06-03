@@ -4,20 +4,19 @@ import { useState } from "react";
 import "./CreateTodo.css";
 
 function CreateTodo({ updateRefresh }) {
-  const initialData = { text: "", status: "Pending" };
-  const [inputData, setInputData] = useState(initialData);
+  const [inputData, setInputData] = useState({ text: "", status: "Pending" });
 
   function handleChange(e) {
     setInputData({ ...inputData, [e.target.name]: e.target.value });
   }
 
-  async function handleSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
-    if (!inputData.text) {
-      alert("Can't accept empty text field!!!");
+    if (!inputData.text.trim()) {
+      toast.error("Can't accept empty text field!!!");
       return;
     }
-    const response = await addTodo(inputData.text, inputData.status)
+    addTodo(inputData.text, inputData.status)
       .then((data) => {
         toast.success("Todo added to your records.");
         updateRefresh();
@@ -32,7 +31,6 @@ function CreateTodo({ updateRefresh }) {
 
   return (
     <>
-      {/* <ToastContainer /> */}
       <form className="form" onSubmit={handleSubmit}>
         <div className="create-todo-card">
           <div className="todo-text">

@@ -5,14 +5,15 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { isValidPasswordFormat } from "../../../Services/utilServices";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function ChangePassword() {
-  const initialData = {
+  const navigate = useNavigate();
+  const [inputData, setInputData] = useState({
     oldPassword: "",
     newPassword: "",
     confirmNewPassword: "",
-  }; //it should be state
-  const [inputData, setInputData] = useState(initialData);
+  });
 
   function handleChange(e) {
     setInputData({ ...inputData, [e.target.name]: e.target.value });
@@ -40,13 +41,15 @@ function ChangePassword() {
     }
 
     changePassword(
+      
       inputData.oldPassword,
       inputData.newPassword,
       inputData.confirmNewPassword
     )
       .then((data) => {
         toast.success("Password successfully changed!.");
-        setInputData(initialData)
+        localStorage.clear();
+        navigate("/users/login");
       })
       .catch((error) => {
         console.log(error);
@@ -57,7 +60,6 @@ function ChangePassword() {
   return (
     <div className="container">
       <div className="content">
-        <ToastContainer />
         <div className="heading">Change Password</div>
         <form className="form" onSubmit={handleSubmit}>
           <div className="form-entry">

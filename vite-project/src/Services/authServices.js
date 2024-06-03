@@ -50,8 +50,7 @@ export const forgetPassword = async (email) => {
 
 export const resetPassword = async (token, newPassword, confirmNewPassword) => {
   return new Promise((resolve, reject) => {
-    putCall("/users/reset_password", {
-      token,
+    putCall(`/users/reset_password/${token}`, {
       newPassword,
       confirmNewPassword,
     })
@@ -68,6 +67,8 @@ export const changePassword = async (
   oldPassword,
   newPassword,
   confirmNewPassword
+
+  // body
 ) => {
   return new Promise((resolve, reject) => {
     authorizedPostCall("/users/change_password", {

@@ -5,13 +5,27 @@
 }
 
 .todo-item-text {
-  flex: 0 0 85%; /* Flex-grow: 0, flex-shrink: 0, flex-basis: 80% */
-  /* background-color: lightgray; Just for visualization */
+  flex: 0 0 85%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: auto;
+}
+
+.completed-item {
+  font-style: italic;
+  text-decoration: line-through;
+}
+
+.status {
+  padding-right: 20%;
+  font-weight: bold;
+  color: blue;
+  text-decoration: none;
 }
 
 .todo-item-controls {
-  flex: 0 0 15%; /* Flex-grow: 0, flex-shrink: 0, flex-basis: 80% */
-  /* background-color: lightblue; Just for visualization */
+  flex: 0 0 15%;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -47,27 +61,40 @@
   background-color: rgb(219, 35, 35);
 }
 
+.update-input-field-div {
+  display: flex;
+  flex-direction: row;
+  min-height: 30px;
+  width: 70%;
+  min-width: 200px;
+}
+.todo-item-text {
+  width: 100%;
+}
+.todo-item-text input {
+  width: 80%;
+  min-height: 30px;
+  border: solid black 2px;
+  border-radius: 5px;
+}
+
 .update-todo-card {
   display: flex;
   flex-direction: row;
-  /* background-color: aqua; */
   justify-content: space-between;
   margin-bottom: 3em;
 }
 
-.update-input-fields-div {
-  display: flex;
-  flex-direction: row;
+.todo-status {
+  width: 15%;
+  min-width: 80px;
 }
-
 .todo-status select {
-  background-color: rgb(27, 201, 224);
+  width: 100%;
+  background-color: rgb(51, 0, 145);
   border: 1px solid;
+  color: white;
   height: 3em;
   border-radius: 5px;
   font-weight: bolder;
-}
-.completed-item {
-  font-style: italic;
-  text-decoration: line-through;
 }

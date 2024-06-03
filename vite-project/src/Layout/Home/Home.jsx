@@ -11,7 +11,7 @@ function HomePage() {
       <br/> */}
       <Link to="users/forget_password/">Forget Password</Link>
       <br/>
-      <Link to="users/change_password/">Change Password</Link>
+      <Link to="users/change_password/:token">Change Password</Link>
     </>
   );
 }

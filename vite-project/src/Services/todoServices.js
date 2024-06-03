@@ -1,13 +1,13 @@
 import {
   authorizedPostCall,
   authorizedDeleteCall,
-  getCall,
+  authorizedGetCall,
   authorizedPutCall,
 } from "./APIsServices";
 
 export const getTodos = async () => {
   return new Promise((resolve, reject) => {
-    getCall("/todos/get_todos")
+    authorizedGetCall("/todos/get_todos")
       .then((data) => {
         resolve(data);
       })

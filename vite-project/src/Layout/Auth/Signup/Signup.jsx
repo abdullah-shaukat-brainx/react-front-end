@@ -9,10 +9,10 @@ import {
 } from "../../../Services/utilServices";
 import { Link } from "react-router-dom";
 
-
 function SignUpForm() {
-  const initialData = { email: "", password: "", confirmPassword: "" };  //it should be state
-  const [inputData, setInputData] = useState(initialData); 
+  const [inputData, setInputData] = useState({ email: "", password: "", confirmPassword: "" });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   function handleChange(e) {
     setInputData({ ...inputData, [e.target.name]: e.target.value });
@@ -21,36 +21,37 @@ function SignUpForm() {
   async function handleSubmit(e) {
     e.preventDefault();
     if (!inputData.email || !inputData.password || !inputData.confirmPassword) {
-      alert("Can't accept empty field!!!");
+      toast.error("Can't accept empty field!!!");
       return;
     }
     if (
       !isValidEmailFormat(inputData.email) ||
       !isValidPasswordFormat(inputData.password)
     ) {
-      alert("Wrong email or password format");
+      toast.error("Wrong email or password format");
       return;
     }
     if (inputData.password !== inputData.confirmPassword) {
-      alert("Password not matching with confirm password");
+      toast.error("Password not matching with confirm password");
       return;
     }
 
     signup(inputData.email, inputData.password, inputData.confirmPassword)
       .then((data) => {
-        toast.success("User sign up successful, check email for verification link.");
-        setInputData(initialData)
+        toast.success(
+          "User sign up successful, check email for verification link."
+        );
+        setInputData({ email: "", password: "", confirmPassword: "" });
       })
       .catch((error) => {
-        console.log(error)
-        toast.error(error?.response?.data?.error)
+        console.log(error);
+        toast.error(error?.response?.data?.error);
       });
   }
 
   return (
     <div className="container">
       <div className="content">
-      <ToastContainer />
         <div className="heading">Sign Up</div>
         <form className="form" onSubmit={handleSubmit}>
           <div className="form-entry">
@@ -72,7 +73,9 @@ function SignUpForm() {
               <strong>Password</strong>
             </label>
             <input
-              type="password"
+              type={
+                showPassword ? "text" : "password"
+            }
               name="password"
               value={inputData.password}
               onChange={handleChange}
@@ -81,12 +84,23 @@ function SignUpForm() {
               required
             />
           </div>
+          <div className="show-password">
+            Show Password:{" "}
+            <input
+              id="check"
+              type="checkbox"
+              value={showPassword}
+              onChange={() => setShowPassword((prev) => !prev)}
+            />
+          </div>
           <div className="form-entry">
             <label htmlFor="confirmPassword">
               <strong>Confirm Password</strong>
             </label>
             <input
-              type="password"
+              type={
+                showConfirmPassword ? "text" : "password"
+            }
               name="confirmPassword"
               value={inputData.confirmPassword}
               onChange={handleChange}
@@ -95,12 +109,23 @@ function SignUpForm() {
               required
             />
           </div>
+          <div className="show-password">
+            Show Password:{" "}
+            <input
+              id="check"
+              type="checkbox"
+              value={showPassword}
+              onChange={() => setShowConfirmPassword((prev) => !prev)}
+            />
+          </div>
           <div className="form-entry">
             <input type="submit" value="Submit" className="submit-button" />
           </div>
         </form>
         <div className="login-link">
-        <Link to="/users/login">Already Signed up? Click here to Log in!</Link>
+          <Link to="/users/login">
+            Already Signed up? Click here to Log in!
+          </Link>
         </div>
       </div>
     </div>

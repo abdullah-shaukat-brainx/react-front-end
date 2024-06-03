@@ -29,7 +29,7 @@ export const putCall = async (url, data) => {
   }
 };
 
-export const getCall = async (url) => {
+export const authorizedGetCall = async (url) => {
   return new Promise((resolve, reject) => {
     axios
       .get(BASE_URL + url, {

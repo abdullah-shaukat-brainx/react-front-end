@@ -4,11 +4,12 @@ import { resetPassword } from "../../../Services/authServices";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { isValidPasswordFormat } from "../../../Services/utilServices";
-import { Link } from "react-router-dom";
-
+import { Link, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 function ResetPassword() {
-  const initialData = { token: "", newPassword: "", confirmNewPassword: "" };
-  const [inputData, setInputData] = useState(initialData);
+  const navigate = useNavigate();
+  const params = useParams();
+  const [inputData, setInputData] = useState({ newPassword: "", confirmNewPassword: "" });
 
   function handleChange(e) {
     setInputData({ ...inputData, [e.target.name]: e.target.value });
@@ -16,31 +17,28 @@ function ResetPassword() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    if (
-      !inputData.token ||
-      !inputData.newPassword ||
-      !inputData.confirmNewPassword
-    ) {
-      alert("Can't accept empty field!!!");
+    if (!inputData.newPassword || !inputData.confirmNewPassword) {
+      toast.error("Can't accept empty field!!!");
       return;
     }
     if (!isValidPasswordFormat(inputData.newPassword)) {
-      alert("Wrong password format");
+      toast.error("Wrong password format");
       return;
     }
     if (inputData.newPassword !== inputData.confirmNewPassword) {
-      alert("Password not matching with confirm password");
+      toast.error("Password not matching with confirm password");
       return;
     }
 
     resetPassword(
-      inputData.token,
+      params.token,
       inputData.newPassword,
       inputData.confirmNewPassword
     )
       .then((data) => {
         toast.success("Password Updated Sucessfully.");
-        setInputData(initialData)
+        setInputData({ newPassword: "", confirmNewPassword: "" });
+        navigate("/users/login");
       })
       .catch((error) => {
         console.log(error);
@@ -51,23 +49,8 @@ function ResetPassword() {
   return (
     <div className="container">
       <div className="content">
-        <ToastContainer />
         <div className="heading">Reset Password</div>
         <form className="form" onSubmit={handleSubmit}>
-          <div className="form-entry">
-            <label htmlFor="token">
-              <strong>Token</strong>
-            </label>
-            <input
-              type="text"
-              name="token"
-              value={inputData.token}
-              onChange={handleChange}
-              className="form-input"
-              placeholder="Paste Token Here"
-              required
-            />
-          </div>
           <div className="form-entry">
             <label htmlFor="newPassword">
               <strong>New Password</strong>

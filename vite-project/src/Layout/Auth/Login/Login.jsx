@@ -1,17 +1,24 @@
 import "./Login.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { login } from "../../../Services/authServices";
 import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import {
   isValidEmailFormat,
   isValidPasswordFormat,
 } from "../../../Services/utilServices";
 import { Link, useNavigate } from "react-router-dom";
+
 function LogInForm() {
+  useEffect(() => {
+    if (localStorage.getItem("access_token")) {
+      navigate("todos/todo_home");
+    }
+  });
+
   const navigate = useNavigate();
-  const initialData = { email: "", password: "" };
-  const [inputData, setInputData] = useState(initialData);
+
+  const [inputData, setInputData] = useState({ email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
   function handleChange(e) {
     setInputData({ ...inputData, [e.target.name]: e.target.value });
   }
@@ -19,14 +26,14 @@ function LogInForm() {
   async function handleSubmit(e) {
     e.preventDefault();
     if (!inputData.email || !inputData.password) {
-      alert("Can't accept empty field!!!");
+      toast.error("Can't accept empty field!!!");
       return;
     }
     if (
       !isValidEmailFormat(inputData.email) ||
       !isValidPasswordFormat(inputData.password)
     ) {
-      alert("Wrong email or password format");
+      toast.error("Wrong email or password format");
       return;
     }
 
@@ -36,10 +43,8 @@ function LogInForm() {
         localStorage.setItem("user_details", JSON.stringify(data?.data?.User));
 
         toast.success("Login successful, redirecting to your Todos Page.");
-        setInputData(initialData)
-        setTimeout(() => {
-          navigate("/todos/todo_home");
-        }, 3000);
+        setInputData({ email: "", password: "" });
+        navigate("/todos/todo_home");
       })
       .catch((error) => {
         console.log(error);
@@ -50,7 +55,6 @@ function LogInForm() {
   return (
     <div className="container">
       <div className="content">
-        <ToastContainer />
         <div className="heading">Log In</div>
         <form className="form" onSubmit={handleSubmit}>
           <div className="form-entry">
@@ -72,9 +76,8 @@ function LogInForm() {
               <strong>Password</strong>
             </label>
 
-            {/* Password should have functionality of view */}
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               required
               value={inputData.password}
@@ -82,6 +85,18 @@ function LogInForm() {
               className="form-input"
               placeholder="Enter Password"
             />
+            <div className="show-password">
+              Show Password:{" "}
+              <input
+                id="check"
+                type="checkbox"
+                value={showPassword}
+                onChange={() => setShowPassword((prev) => !prev)}
+              />
+            </div>
+          </div>
+          <div className="forget-password-link">
+            <Link to="/users/forget_password">Forgot your password?</Link>
           </div>
           <div className="form-entry">
             <input type="submit" value="Submit" className="submit-button" />
@@ -89,7 +104,7 @@ function LogInForm() {
         </form>
         <div className="signup-link">
           <Link to="/users/signup">
-            Not Signed Up yet? Click here to Sign In!
+            Not Signed Up yet? Click here to Sign Up!
           </Link>
         </div>
       </div>

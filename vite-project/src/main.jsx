@@ -9,13 +9,17 @@ import ForgetPassword from "./Layout/Auth/ForgetPassword/ForgetPassword";
 import ResetPassword from "./Layout/Auth/ResetPassword/ResetPassword";
 import ChangePassword from "./Layout/Auth/ChangePassword/ChangePassword";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import { Navigate } from "react-router-dom";
+import { isAuthenticated } from "./Utils";
+import "react-toastify/dist/ReactToastify.css";
+
+const PrivateRoute = ({ children }) => {
+  return isAuthenticated() ? children : <Navigate to="/users/login" />;
+};
 
 const router = createBrowserRouter([
-  //User Routes
-  {
-    path: "/",
-    element: <HomePage />,
-  },
+  // User Routes
   {
     path: "/users/signup",
     element: <SignUpForm />,
@@ -29,27 +33,44 @@ const router = createBrowserRouter([
     element: <VerifyEmail />,
   },
   {
-    path: "/users/change_password/",
-    element: <ChangePassword />,
-  },
-  {
-    path: "/users/reset_password",
+    path: "/users/reset_password/:token",
     element: <ResetPassword />,
   },
   {
     path: "/users/forget_password",
     element: <ForgetPassword />,
   },
-
-  //Todo Route
+  {
+    // Default
+    path: "*",
+    element: <LogInForm />,
+  },
+  {
+    path: "/",
+    element: <HomePage />,
+  },
+  // Protected Routes
+  {
+    path: "/users/change_password/",
+    element: (
+      <PrivateRoute>
+        <ChangePassword />
+      </PrivateRoute>
+    ),
+  },
   {
     path: "/todos/todo_home/",
-    element: <TodoHome />,
+    element: (
+      <PrivateRoute>
+        <TodoHome />
+      </PrivateRoute>
+    ),
   },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
+    <ToastContainer />
     <RouterProvider router={router} />
   </React.StrictMode>
 );
