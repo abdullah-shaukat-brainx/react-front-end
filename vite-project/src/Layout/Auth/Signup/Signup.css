@@ -1,67 +1,72 @@
 body {
-    background-color: rgb(169, 169, 179);
-  }
+  background-color: rgb(169, 169, 179);
+}
+
+.heading {
+  font-size: 50px;  
+  /* should be in rem or em */
   
-  .heading {
-    font-size: 50px;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    background-color: rgb(45, 134, 185);
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    color: beige;
-    font-style: oblique;
-  }
-  
-  .container {
-    height: 60%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .content {
-    padding: 10%;
-    width: 30%;
-    min-width: 200px;
-    border-radius: 5px;
-    max-height: 80vh; /* Ensure the container does not exceed viewport height */
-    overflow: auto;  /* Allow scrolling if content overflows */
-  }
-  
-  .form {
-    width: 100%;
-  }
-  
-  form {
-    width: 100%;
-    color: rgb(0, 0, 0);
-    font-style: oblique;
-  }
-  
-  .form-entry {
-    display: flex;
-    flex-direction: column;
-    margin-top: 5%;
-  }
-  
-  .form-input {
-    border: none;
-    border-radius: 10px;
-    height: 35px;
-    background-color: rgb(255, 255, 204);
-    padding: 2%;
-  }
-  
-  .submit-button {
-    height: 40px;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    background-color: green;
-  }
-  .submit-button:hover {
-    background-color: greenyellow;
-  }
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background-color: rgb(45, 134, 185);
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  color: beige;
+  font-style: oblique;
+}
+
+.container {
+  height: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.content {
+  padding: 10%;
+  width: 30%;
+  min-width: 200px;
+  border-radius: 5px;
+  max-height: 80vh;
+}
+
+.form {
+  width: 100%;
+}
+
+form {
+  width: 100%;
+  color: rgb(0, 0, 0);
+  font-style: oblique;
+}
+
+.form-entry {
+  display: flex;
+  flex-direction: column;
+  margin-top: 5%;
+}
+
+.form-input {
+  border: none;
+  border-radius: 10px;
+  height: 35px;
+  background-color: rgb(255, 255, 204);
+  padding: 2%;
+}
+
+.submit-button {
+  height: 40px;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  background-color: green;
+}
+.submit-button:hover {
+  background-color: greenyellow;
+}
+.login-link{
+  margin-top: 5%;
+  text-align: center;
+}
