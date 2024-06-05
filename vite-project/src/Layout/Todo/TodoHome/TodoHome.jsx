@@ -23,17 +23,17 @@ function TodoHome() {
 
   const useDebouncedValue = (inputValue, delay) => {
     const [debouncedValue, setDebouncedValue] = useState(inputValue);
-  
+
     useEffect(() => {
       const handler = setTimeout(() => {
         setDebouncedValue(inputValue);
       }, delay);
-  
+
       return () => {
         clearTimeout(handler);
       };
     }, [inputValue, delay]);
-  
+
     return debouncedValue;
   };
 
@@ -41,6 +41,7 @@ function TodoHome() {
 
   const handleChange = (e) => {
     setSearchQuery(e.target.value);
+    setCurrentPage(1);
   };
 
   const [currentPage, setCurrentPage] = useState(
@@ -67,7 +68,7 @@ function TodoHome() {
 
   useEffect(() => {
     fetchTodos(currentPage, limit);
-  }, [refresh, debouncedSearchQuery, currentPage, limit]);
+  }, [refresh, debouncedSearchQuery, currentPage, limit, searchParams]);
 
   useEffect(() => {
     setSearchParams({ page: currentPage, limit: limit });
@@ -142,13 +143,18 @@ function TodoHome() {
               count={Math.ceil(totalPagesCount / limit)}
               page={currentPage}
               onChange={handlePageChange}
+              size="large"
             />
             <div className="limit-selection">
               Showing {limit} items per Page
               <select
                 name="limit"
                 value={limit}
-                onChange={(e) => setLimit(parseInt(e.target.value))}
+                onChange={(e) => {
+                  // setSearchParams({ page: 1, limit: {limit} });
+                  setLimit(parseInt(e.target.value));
+                  setCurrentPage(1);
+                }}
               >
                 <option value="3">3</option>
                 <option value="5">5</option>

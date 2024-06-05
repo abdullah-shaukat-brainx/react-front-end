@@ -1,10 +1,10 @@
 import "./ResetPassword.css";
 import { useState } from "react";
 import { resetPassword } from "../../../Services/authServices";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { isValidPasswordFormat } from "../../../Services/utilServices";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 function ResetPassword() {
   const navigate = useNavigate();
