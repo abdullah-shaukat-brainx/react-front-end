@@ -10,7 +10,11 @@ import {
 import { Link } from "react-router-dom";
 
 function SignUpForm() {
-  const [inputData, setInputData] = useState({ email: "", password: "", confirmPassword: "" });
+  const [inputData, setInputData] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -24,13 +28,16 @@ function SignUpForm() {
       toast.error("Can't accept empty field!!!");
       return;
     }
-    if (
-      !isValidEmailFormat(inputData.email) ||
-      !isValidPasswordFormat(inputData.password)
-    ) {
-      toast.error("Wrong email or password format");
+    if (!isValidEmailFormat(inputData.email)) {
+      toast.error("Wrong email format");
       return;
     }
+
+    if (!isValidPasswordFormat(inputData.password)) {
+      toast.error("Wrong password format");
+      return;
+    }
+
     if (inputData.password !== inputData.confirmPassword) {
       toast.error("Password not matching with confirm password");
       return;
@@ -73,9 +80,7 @@ function SignUpForm() {
               <strong>Password</strong>
             </label>
             <input
-              type={
-                showPassword ? "text" : "password"
-            }
+              type={showPassword ? "text" : "password"}
               name="password"
               value={inputData.password}
               onChange={handleChange}
@@ -98,9 +103,7 @@ function SignUpForm() {
               <strong>Confirm Password</strong>
             </label>
             <input
-              type={
-                showConfirmPassword ? "text" : "password"
-            }
+              type={showConfirmPassword ? "text" : "password"}
               name="confirmPassword"
               value={inputData.confirmPassword}
               onChange={handleChange}

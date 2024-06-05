@@ -13,6 +13,7 @@ import { ToastContainer } from "react-toastify";
 import { Navigate } from "react-router-dom";
 import { isAuthenticated } from "./Utils";
 import "react-toastify/dist/ReactToastify.css";
+// require("dotenv").config();
 
 const PrivateRoute = ({ children }) => {
   return isAuthenticated() ? children : <Navigate to="/users/login" />;

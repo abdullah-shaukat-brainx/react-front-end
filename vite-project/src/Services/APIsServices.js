@@ -30,21 +30,37 @@ export const putCall = async (url, data) => {
 };
 
 export const authorizedGetCall = async (url) => {
-  return new Promise((resolve, reject) => {
-    axios
-      .get(BASE_URL + url, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("access_token"),
-        },
-      })
-      .then((data) => {
-        resolve(data?.data);
-      })
-      .catch((err) => {
-        throw err;
-      });
-  });
+  try {
+    const response = await axios.get(BASE_URL + url, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("access_token"),
+      },
+    });
+    const result = {
+      ...response.data, // Spread the properties of response.data.data
+    };
+    return result;
+  } catch (error) {
+    throw error;
+  }
 };
+
+// export const authorizedGetCall = async (url) => {
+//   return new Promise((resolve, reject) => {
+//     axios
+//       .get(BASE_URL + url, {
+//         headers: {
+//           Authorization: "Bearer " + localStorage.getItem("access_token"),
+//         },
+//       })
+//       .then((data) => {
+//         resolve(data?.data);
+//       })
+//       .catch((err) => {
+//         throw err;
+//       });
+//   });
+// };
 
 export const authorizedPostCall = async (url, data) => {
   try {

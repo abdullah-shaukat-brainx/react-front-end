@@ -2,22 +2,18 @@ import { toast } from "react-toastify";
 import { deleteTodo, updateTodo } from "../../../Services/todoServices";
 import { useState } from "react";
 import "./TodoItem.css";
-import { FidgetSpinner, InfinitySpin } from "react-loader-spinner";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 
 function TodoItem({ text, id, status, updateRefresh }) {
   const removeTodo = () => {
-    setSpinner(true);
     deleteTodo(id)
       .then(() => {
         toast.success(`Todo Removed Successfully.`);
-        setSpinner(false);
         updateRefresh();
       })
       .catch((error) => {
         toast.error("Something went wrong!");
-        setSpinner(false);
       });
   };
   const options = {
@@ -48,7 +44,6 @@ function TodoItem({ text, id, status, updateRefresh }) {
   };
 
   const [inputData, setInputData] = useState({ text, status });
-  const [spinner, setSpinner] = useState(false);
   const [edit, setEdit] = useState(false);
 
   function handleChange(e) {
@@ -62,26 +57,22 @@ function TodoItem({ text, id, status, updateRefresh }) {
       return;
     }
     try {
-      setSpinner(true);
       const response = await updateTodo(
         id,
         inputData.text.trim(),
         inputData.status
       );
       toast.success(`Todo Updated Successfully!`);
-      setSpinner(false);
     } catch (error) {
       toast.error("Something went wrong!");
-      setSpinner(false);
     } finally {
       setEdit(false);
-      // setInputData({ text, status });
       updateRefresh();
     }
   };
   return (
     <>
-      {!edit ? ( //if edit is false
+      {!edit ? (
         <>
           <div className="todo-item">
             <div
@@ -107,7 +98,6 @@ function TodoItem({ text, id, status, updateRefresh }) {
           </div>
         </>
       ) : (
-        //else (if edit is true)
 
         <div className="edit-field">
           <form className="form" onSubmit={handleUpdate}>

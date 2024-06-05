@@ -5,9 +5,11 @@ import {
   authorizedPutCall,
 } from "./APIsServices";
 
-export const getTodos = async () => {
+export const getTodos = async (data) => {
   return new Promise((resolve, reject) => {
-    authorizedGetCall("/todos/get_todos")
+    authorizedGetCall(
+      `/todos/get_todos?limit=${data.limit}&page=${data.page}&searchQuery=${data.searchQuery}`
+    )
       .then((data) => {
         resolve(data);
       })
