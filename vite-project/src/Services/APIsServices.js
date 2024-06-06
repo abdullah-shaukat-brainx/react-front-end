@@ -45,22 +45,6 @@ export const authorizedGetCall = async (url) => {
   }
 };
 
-// export const authorizedGetCall = async (url) => {
-//   return new Promise((resolve, reject) => {
-//     axios
-//       .get(BASE_URL + url, {
-//         headers: {
-//           Authorization: "Bearer " + localStorage.getItem("access_token"),
-//         },
-//       })
-//       .then((data) => {
-//         resolve(data?.data);
-//       })
-//       .catch((err) => {
-//         throw err;
-//       });
-//   });
-// };
 
 export const authorizedPostCall = async (url, data) => {
   try {
