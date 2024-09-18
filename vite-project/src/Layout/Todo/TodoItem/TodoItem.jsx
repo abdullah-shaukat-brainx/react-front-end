@@ -1,36 +1,42 @@
 import { toast } from "react-toastify";
-import { deleteTodo, updateTodo } from "../../../Services/todoServices";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  deleteTodoFromBackend,
+  updateTodoInBackend,
+} from "../../../features/todoThunk";
 import { useState } from "react";
 import "./TodoItem.css";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 
-function TodoItem({ text, id, status, updateRefresh }) {
+function TodoItem({ text, id, status }) {
+  const dispatch = useDispatch();
+  const { loading } = useSelector((state) => state.todos);
+  const [inputData, setInputData] = useState({ text, status });
+  const [edit, setEdit] = useState(false);
+
   const removeTodo = () => {
-    deleteTodo(id)
+    dispatch(deleteTodoFromBackend(id))
+      .unwrap()
       .then(() => {
-        toast.success(`Todo Removed Successfully.`);
-        updateRefresh();
+        toast.success("Todo Removed Successfully.");
       })
       .catch((error) => {
         toast.error("Something went wrong!");
       });
   };
+
   const options = {
     title: "Delete Todo",
     message: "Are you sure you want to delete this todo item?",
     buttons: [
       {
         label: "Yes",
-        onClick: () => {
-          removeTodo();
-        },
+        onClick: () => removeTodo(),
       },
       {
         label: "No",
-        onClick: () => {
-          return;
-        },
+        onClick: () => {},
       },
     ],
     closeOnEscape: true,
@@ -43,62 +49,65 @@ function TodoItem({ text, id, status, updateRefresh }) {
     confirmAlert(options);
   };
 
-  const [inputData, setInputData] = useState({ text, status });
-  const [edit, setEdit] = useState(false);
-
   function handleChange(e) {
     setInputData({ ...inputData, [e.target.name]: e.target.value });
   }
+
   const handleUpdate = async (e) => {
-    e.preventDefault(); // Prevent form submission from refreshing the page
-    setEdit(true);
+    e.preventDefault();
     if (inputData.text.trim() === "") {
-      toast.error("Cant accept empty Text Field");
+      toast.error("Can't accept empty Text Field");
       return;
     }
-    try {
-      const response = await updateTodo(
+    dispatch(
+      updateTodoInBackend({
         id,
-        inputData.text.trim(),
-        inputData.status
-      );
-      toast.success(`Todo Updated Successfully!`);
-    } catch (error) {
-      toast.error("Something went wrong!");
-    } finally {
-      setEdit(false);
-      updateRefresh();
-    }
+        text: inputData.text.trim(),
+        status: inputData.status,
+      })
+    )
+      .unwrap()
+      .then(() => {
+        toast.success("Todo Updated Successfully!");
+      })
+      .catch((error) => {
+        toast.error("Something went wrong!");
+      });
+    setEdit(false);
   };
+
   return (
     <>
       {!edit ? (
-        <>
-          <div className="todo-item">
-            <div
-              className={`todo-item-text ${
-                status === "Completed" ? "completed-item" : "incomplete-item"
-              }`}
-            >
-              {`${text}`}
-              <div className="status">{status}</div>
+        <div className="todo-item">
+          <div
+            className={`todo-item-text ${
+              status === "Completed" ? "completed-item" : "incomplete-item"
+            }`}
+          >
+            {text}
+            <div className="status">{status}</div>
+          </div>
+          <div className="todo-item-controls">
+            <div className="update-todo-button">
+              <input
+                type="button"
+                value="Edit"
+                onClick={() => setEdit(!edit)}
+                disabled={loading}
+              />
             </div>
-            <div className="todo-item-controls">
-              <div className="update-todo-button">
-                <input
-                  type="button"
-                  value="Edit"
-                  onClick={() => setEdit(!edit)}
-                />
-              </div>
-              <div className="delete-todo-button">
-                <input type="button" value="Delete" onClick={handleDelete} />
-              </div>
+            <div className="delete-todo-button">
+              <input
+                type="button"
+                value="Delete"
+                onClick={handleDelete}
+                disabled={loading}
+              />
             </div>
           </div>
-        </>
+        </div>
       ) : (
-
         <div className="edit-field">
           <form className="form" onSubmit={handleUpdate}>
             <div className="update-todo-card">
@@ -107,13 +116,17 @@ function TodoItem({ text, id, status, updateRefresh }) {
                   <input
                     type="text"
                     name="text"
-                    id=""
                     value={inputData.text}
                     onChange={handleChange}
                   />
                 </div>
                 <div className="todo-status">
-                  <select id="status" name="status" onChange={handleChange}>
+                  <select
+                    id="status"
+                    name="status"
+                    value={inputData.status}
+                    onChange={handleChange}
+                  >
                     <option value="Pending">Select a Status</option>
                     <option value="Pending">Pending</option>
                     <option value="Ongoing">Ongoing</option>
@@ -122,7 +135,12 @@ function TodoItem({ text, id, status, updateRefresh }) {
                 </div>
               </div>
               <div className="todo-submit-button">
-                <input type="submit" value="Update" className="submit-button" />
+                <input
+                  type="submit"
+                  value={loading ? "Updating..." : "Update"}
+                  className="submit-button"
+                  disabled={loading}
+                />
               </div>
             </div>
           </form>
@@ -131,4 +149,5 @@ function TodoItem({ text, id, status, updateRefresh }) {
     </>
   );
 }
+
 export default TodoItem;

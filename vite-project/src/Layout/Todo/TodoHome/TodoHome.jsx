@@ -1,25 +1,29 @@
 import { toast } from "react-toastify";
 import { useEffect, useState } from "react";
-import { getTodos } from "../../../Services/todoServices";
-import CreateTodo from "../CreateTodo/CreateTodo";
-import "./TodoHome.css";
-import TodoItem from "../TodoItem/TodoItem";
 import { InfinitySpin } from "react-loader-spinner";
 import { useNavigate } from "react-router";
 import { useSearchParams } from "react-router-dom";
 import Pagination from "@mui/material/Pagination";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchTodosFromApi } from "../../../features/todoThunk";
+import CreateTodo from "../CreateTodo/CreateTodo";
+import TodoItem from "../TodoItem/TodoItem";
+import "./TodoHome.css";
 
 function TodoHome() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [spinner, setSpinner] = useState(false);
-  const [todos, setTodos] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [refresh, setRefresh] = useState();
-  const [totalPagesCount, setTotalPagesCount] = useState(1);
-  const updateRefresh = () => {
-    setRefresh(!refresh);
-  };
+  const [refresh, setRefresh] = useState(false);
+  const [currentPage, setCurrentPage] = useState(
+    parseInt(searchParams.get("page")) || 1
+  );
+  const [limit, setLimit] = useState(parseInt(searchParams.get("limit")) || 5);
+
+  const { todos, totalPagesCount, loading } = useSelector(
+    (state) => state.todos
+  );
 
   const useDebouncedValue = (inputValue, delay) => {
     const [debouncedValue, setDebouncedValue] = useState(inputValue);
@@ -44,31 +48,25 @@ function TodoHome() {
     setCurrentPage(1);
   };
 
-  const [currentPage, setCurrentPage] = useState(
-    parseInt(searchParams?.get("page")) || 1
-  );
-  const [limit, setLimit] = useState(parseInt(searchParams?.get("limit")) || 5);
-
-  const fetchTodos = async (page, limit) => {
-    setSpinner(true);
-    try {
-      const response = await getTodos({
+  const fetchTodos = () => {
+    dispatch(
+      fetchTodosFromApi({
         searchQuery: searchQuery.trim(),
-        page: page,
+        page: currentPage,
         limit: limit,
-      });
-      setTotalPagesCount(parseInt(response?.data?.count));
-      setTodos(response?.data?.Todos);
-    } catch (error) {
-      toast.error(`${error?.response?.data?.error}` || "Unable to Fetch Todos");
-    } finally {
-      setSpinner(false);
-    }
+      })
+    );
   };
 
   useEffect(() => {
-    fetchTodos(currentPage, limit);
-  }, [refresh, debouncedSearchQuery, currentPage, limit, searchParams]);
+    if (!todos) {
+      fetchTodos();
+    }
+  }, [refresh]);
+
+  useEffect(() => {
+    fetchTodos();
+  }, [currentPage, debouncedSearchQuery, limit]);
 
   useEffect(() => {
     setSearchParams({ page: currentPage, limit: limit });
@@ -112,25 +110,24 @@ function TodoHome() {
           />
         </div>
       </div>
-      <CreateTodo updateRefresh={updateRefresh} />
-      {todos.length === 0 ? (
+      <CreateTodo onRefresh={() => setRefresh(!refresh)} />
+      {loading ? (
+        <div className="spinner">
+          <InfinitySpin />
+        </div>
+      ) : todos.length === 0 ? (
         <h2>No todos to show.</h2>
       ) : (
         <>
           <div className="todos-card">
-            {spinner && (
-              <div className="spinner">
-                <InfinitySpin />
-              </div>
-            )}
             <ul>
-              {todos.map((todo, index) => (
+              {todos?.map((todo) => (
                 <li key={todo._id}>
                   <TodoItem
                     id={todo._id}
                     text={todo.text}
                     status={todo.status}
-                    updateRefresh={updateRefresh}
+                    onUpdate={() => setRefresh(!refresh)} // Ensure refresh is toggled
                   />
                 </li>
               ))}
@@ -139,7 +136,6 @@ function TodoHome() {
           <div className="pages">
             <Pagination
               color="primary"
-              defaultPage={1}
               count={Math.ceil(totalPagesCount / limit)}
               page={currentPage}
               onChange={handlePageChange}
@@ -151,14 +147,12 @@ function TodoHome() {
                 name="limit"
                 value={limit}
                 onChange={(e) => {
-                  // setSearchParams({ page: 1, limit: {limit} });
                   setLimit(parseInt(e.target.value));
                   setCurrentPage(1);
                 }}
               >
                 <option value="3">3</option>
                 <option value="5">5</option>
-                {/* <option value="10">10</option> */}
               </select>
             </div>
           </div>

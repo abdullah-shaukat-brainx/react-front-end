@@ -13,8 +13,8 @@ import { ToastContainer } from "react-toastify";
 import { Navigate } from "react-router-dom";
 import { isAuthenticated } from "./Utils";
 import "react-toastify/dist/ReactToastify.css";
-// require("dotenv").config();
-
+import store from "./store/store";
+import { Provider } from "react-redux";
 const PrivateRoute = ({ children }) => {
   return isAuthenticated() ? children : <Navigate to="/users/login" />;
 };
@@ -70,8 +70,10 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  // <React.StrictMode>
+  <Provider store={store}>
     <ToastContainer />
     <RouterProvider router={router} />
-  </React.StrictMode>
+  </Provider>
+  // </React.StrictMode>
 );
