@@ -1,10 +1,13 @@
-import { ToastContainer, toast } from "react-toastify";
-import { addTodo } from "../../../Services/todoServices";
+import { toast } from "react-toastify";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { addTodoToBackend } from "../../../features/todoThunk"; // Redux action
 import "./CreateTodo.css";
 
-function CreateTodo({ updateRefresh }) {
+function CreateTodo() {
+  const dispatch = useDispatch();
   const [inputData, setInputData] = useState({ text: "", status: "Pending" });
+  const { loading } = useSelector((state) => state.todos); // Get loading state from Redux
 
   function handleChange(e) {
     setInputData({ ...inputData, [e.target.name]: e.target.value });
@@ -16,17 +19,19 @@ function CreateTodo({ updateRefresh }) {
       toast.error("Can't accept empty text field!!!");
       return;
     }
-    addTodo(inputData.text, inputData.status)
-      .then((data) => {
+
+    dispatch(
+      addTodoToBackend({ text: inputData.text, status: inputData.status })
+    )
+      .unwrap()
+      .then(() => {
         toast.success("Todo added to your records.");
-        updateRefresh();
+        setInputData({ text: "", status: "Pending" });
       })
       .catch((error) => {
-        console.log(error);
-        toast.error(error?.response?.data?.error);
+        console.error(error);
+        toast.error(error?.message || "Failed to add todo.");
       });
-
-    setInputData({ ...inputData, text: "" }); // Clear the input field after submission
   }
 
   return (
@@ -37,13 +42,18 @@ function CreateTodo({ updateRefresh }) {
             <input
               type="text"
               name="text"
-              id=""
               value={inputData.text}
               onChange={handleChange}
+              disabled={loading}
             />
           </div>
           <div className="todo-submit-button">
-            <input type="submit" value="Add" className="submit-button" />
+            <input
+              type="submit"
+              value={loading ? "Adding..." : "Add"}
+              className="submit-button"
+              disabled={loading}
+            />
           </div>
         </div>
       </form>

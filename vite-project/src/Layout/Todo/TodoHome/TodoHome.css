@@ -12,6 +12,7 @@
   margin-top: 5%;
   margin-left: 10%;
   margin-right: 10%;
+  min-height: 380px;
 }
 
 .control-buttons {
@@ -50,4 +51,28 @@
 }
 .spinner {
   text-align: center;
+}
+
+.pages {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 10%;
+}
+
+/* .limit-selection{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 10x;
+} */
+.back-pagination,
+.next-pagination {
+  color: blue;
+}
+
+.back-pagination:hover,
+.next-pagination:hover {
+  font-weight: bolder;
+  cursor: pointer;
 }
